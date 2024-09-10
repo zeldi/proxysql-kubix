@@ -38,7 +38,7 @@ mysql_servers =
 (
       { address="172.20.197.104" , port=3306 , hostgroup=10, max_connections=5000 },
       { address="172.20.197.105" , port=3306 , hostgroup=30, max_connections=5000 },
-      { address="172.20.197.106" , port=3306 , hostgroup=30, max_connections=5000 }.
+      { address="172.20.197.106" , port=3306 , hostgroup=30, max_connections=5000 },
 )
 
 
