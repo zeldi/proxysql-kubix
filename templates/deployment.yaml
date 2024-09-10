@@ -38,12 +38,12 @@ spec:
             - name: {{ .Release.Name }}-config
               mountPath: /etc/proxysql.cnf
               subPath: proxysql.cnf
-          livenessProbe:
-            exec:
-              command: ["/bin/bash","/usr/local/bin/probe-proxysql.bash"]
-          readinessProbe:
-            exec:
-              command: ["/bin/bash","/usr/local/bin/probe-proxysql.bash"]
+          # livenessProbe:
+          #   exec:
+          #     command: ["/bin/bash","/usr/local/bin/probe-proxysql.bash"]
+          # readinessProbe:
+          #   exec:
+          #     command: ["/bin/bash","/usr/local/bin/probe-proxysql.bash"]
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
     {{- with .Values.nodeSelector }}
