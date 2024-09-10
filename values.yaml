@@ -5,7 +5,7 @@
 replicaCount: 2
 
 image:
-  repository: pondix/proxysqlk8s
+  repository: dustinrue/proxysql
   tag: 2.0.10
   pullPolicy: IfNotPresent
 

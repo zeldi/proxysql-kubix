@@ -1,0 +1,129 @@
+   datadir="/var/lib/proxysql"
+
+   admin_variables=
+   {
+   admin_credentials="admin:admin;radmin:radmin"
+   mysql_ifaces="0.0.0.0:6032"
+   cluster_username="radmin"
+   cluster_password="radmin"
+   cluster_check_interval_ms=200
+   cluster_check_status_frequency=100
+   cluster_mysql_query_rules_save_to_disk=true
+   cluster_mysql_servers_save_to_disk=true
+   cluster_mysql_users_save_to_disk=true
+   cluster_proxysql_servers_save_to_disk=true
+   cluster_mysql_query_rules_diffs_before_sync=3
+   cluster_mysql_servers_diffs_before_sync=3
+   cluster_mysql_users_diffs_before_sync=3
+   cluster_proxysql_servers_diffs_before_sync=3
+   }
+
+   mysql_variables=
+   {
+      threads=4
+      max_connections=25000
+      default_query_delay=0
+      default_query_timeout=36000000
+      have_compress=true
+      poll_timeout=2000
+      interfaces="0.0.0.0:6033;/tmp/proxysql.sock"
+      default_schema="information_schema"
+      stacksize=1048576
+      server_version="8.0.20"
+      connect_timeout_server=3000
+      monitor_username="monitor"
+      monitor_password="m0nit0r!"
+      monitor_history=600000
+      monitor_connect_interval=60000
+      monitor_ping_interval=10000
+      monitor_read_only_interval=1500
+      monitor_read_only_timeout=500
+      ping_interval_server_msec=120000
+      ping_timeout_server=500
+      commands_stats=true
+      sessions_sort=true
+      connect_retries_on_failure=10
+      monitor_galera_healthcheck_interval=2000
+      monitor_galera_healthcheck_timeout=800
+   }
+
+   mysql_galera_hostgroups =
+   (
+      {
+         writer_hostgroup=10
+         backup_writer_hostgroup=20
+         reader_hostgroup=30
+         offline_hostgroup=9999
+         max_writers=1
+         writer_is_also_reader=1
+         max_transactions_behind=30
+         active=1
+      }
+   )
+
+   # defines all the MySQL servers
+   mysql_servers =
+   (
+      { address="172.20.197.104" , port=3306 , hostgroup=10, max_connections=25000 },
+      { address="172.20.197.105" , port=3306 , hostgroup=30, max_connections=25000 },
+      { address="172.20.197.106" , port=3306 , hostgroup=30, max_connections=25000 }
+
+   # defines all the MySQL users
+   mysql_users:
+   (
+   { username = "smarteadmin" , password = "smart32024!" , default_hostgroup = 10 , active = 1 },
+   { username = "smarte" , password = "smart3!" , default_hostgroup = 10 , active = 1 },
+   { username = "monitor" , password = "m0nit0r!" , default_hostgroup = 10 , active = 1 }
+   )
+
+   proxysql_servers =
+   (
+   
+   {
+      hostname="smarte-proxysql-0.smarte-proxysql-headless"
+      port=6032
+      weight=0
+      comment="smarte-proxysql-0.smarte-proxysql"
+   },
+   
+   {
+      hostname="smarte-proxysql-1.smarte-proxysql-headless"
+      port=6032
+      weight=1
+      comment="smarte-proxysql-1.smarte-proxysql"
+   },
+   
+   {
+      hostname="smarte-proxysql-2.smarte-proxysql-headless"
+      port=6032
+      weight=2
+      comment="smarte-proxysql-2.smarte-proxysql"
+   }
+   
+   )
+
+   #defines MySQL Query Rules
+   mysql_query_rules:
+   (
+      {
+         rule_id=100
+               active=1
+               match_pattern="^SELECT .* FOR UPDATE"
+               destination_hostgroup=10
+               apply=1
+         },
+         {
+               rule_id=200
+               active=1
+               match_pattern="^SELECT .*"
+               destination_hostgroup=30
+               apply=1
+         },
+         {
+               rule_id=300
+               active=1
+               match_pattern=".*"
+               destination_hostgroup=10
+               apply=1
+         }
+   )
