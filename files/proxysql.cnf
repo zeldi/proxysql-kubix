@@ -36,36 +36,45 @@ mysql_variables=
 # defines all the MySQL servers
 mysql_servers =
 (
-	{ address="mysql-8.default.svc.cluster.local" , port=3306 , hostgroup=1, max_connections=5000 },
-        { address="mysql-8-slave.default.svc.cluster.local" , port=3306 , hostgroup=1, max_connections=5000 },
+      { address="172.20.197.104" , port=3306 , hostgroup=10, max_connections=5000 },
+      { address="172.20.197.105" , port=3306 , hostgroup=30, max_connections=5000 },
+      { address="172.20.197.106" , port=3306 , hostgroup=30, max_connections=5000 }.
 )
 
 
 # defines all the MySQL users
 mysql_users:
 (
-	{ username = "root" , password = "XHCO2ydDXj" , default_hostgroup = 0 , active = 1 }
-)
+      { username = "smarteadmin" , password = "smart32024!" , default_hostgroup = 10 , active = 1 },
+      { username = "smarte" , password = "smart3!" , default_hostgroup = 10 , active = 1 },
 
+)
 
 
 #defines MySQL Query Rules
 mysql_query_rules:
 (
-	{
-		rule_id=1
-		active=1
-		match_pattern="^SELECT .* FOR UPDATE$"
-		destination_hostgroup=0
-		apply=1
-	},
-	{
-		rule_id=2
-		active=1
-		match_pattern="^SELECT"
-		destination_hostgroup=1
-		apply=1
-	}
+  {
+      rule_id=100
+            active=1
+            match_pattern="^SELECT .* FOR UPDATE"
+            destination_hostgroup=10
+            apply=1
+      },
+      {
+            rule_id=200
+            active=1
+            match_pattern="^SELECT .*"
+            destination_hostgroup=30
+            apply=1
+      },
+      {
+            rule_id=300
+            active=1
+            match_pattern=".*"
+            destination_hostgroup=10
+            apply=1
+      }
 )
 
 scheduler=
@@ -76,8 +85,8 @@ scheduler=
 mysql_replication_hostgroups=
 (
         {
-                writer_hostgroup=0
-                reader_hostgroup=1
+                writer_hostgroup=10
+                reader_hostgroup=30
                 comment="RHG1"
        }
 )
